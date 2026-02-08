@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState } from "react";
 import { useUser } from "@clerk/nextjs";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -63,6 +63,7 @@ export default function DashboardPage() {
 
   useEffect(() => {
     fnUpdates();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);  // Only run once on mount
 
   // Update time every second

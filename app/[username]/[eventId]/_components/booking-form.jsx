@@ -85,7 +85,7 @@ export default function BookingForm({ event, availability, organiserGoogleConnec
               Organizer Not Set Up for Bookings
             </h3>
             <p className="text-red-800 mb-4 text-sm">
-              This event organizer hasn't connected their Google Calendar yet. Without this connection, bookings cannot be processed and video call links cannot be generated.
+              This event organizer hasn&apos;t connected their Google Calendar yet. Without this connection, bookings cannot be processed and video call links cannot be generated.
             </p>
             
             {/* Steps to connect */}
@@ -98,7 +98,7 @@ export default function BookingForm({ event, availability, organiserGoogleConnec
                 </li>
                 <li className="flex gap-2">
                   <span className="font-bold text-red-600 flex-shrink-0">2.</span>
-                  <span>Click the <span className="font-semibold">"Connect Google Calendar"</span> button</span>
+                  <span>Click the <span className="font-semibold">&quot;Connect Google Calendar&quot;</span> button</span>
                 </li>
                 <li className="flex gap-2">
                   <span className="font-bold text-red-600 flex-shrink-0">3.</span>
@@ -116,7 +116,7 @@ export default function BookingForm({ event, availability, organiserGoogleConnec
                   const organiserEmail = event.user?.email;
                   if (organiserEmail) {
                     window.open(
-                      `mailto:${organiserEmail}?subject=Please%20Connect%20Google%20Calendar%20for%20Bookings&body=Hi%20${event.user?.name || 'there'},%0A%0AI'd%20like%20to%20book%20a%20${event.title}%20event,%20but%20I%20see%20that%20your%20Google%20Calendar%20hasn't%20been%20connected%20yet.%0A%0APlease%20connect%20it%20by:%0A1.%20Going%20to%20your%20Availability%20page%0A2.%20Clicking%20'Connect%20Google%20Calendar'%0A3.%20Completing%20the%20authorization%0A%0AThank%20you!`,
+                      `mailto:${organiserEmail}?subject=Please%20Connect%20Google%20Calendar%20for%20Bookings&body=Hi%20${event.user?.name || 'there'},%0A%0AI&apos;d%20like%20to%20book%20a%20${event.title}%20event,%20but%20I%20see%20that%20your%20Google%20Calendar%20hasn&apos;t%20been%20connected%20yet.%0A%0APlease%20connect%20it%20by:%0A1.%20Going%20to%20your%20Availability%20page%0A2.%20Clicking%20&apos;Connect%20Google%20Calendar&apos;%0A3.%20Completing%20the%20authorization%0A%0AThank%20you!`,
                       '_blank'
                     );
                   }
@@ -164,9 +164,9 @@ export default function BookingForm({ event, availability, organiserGoogleConnec
               </h2>
               <p className="text-red-800 mb-4 text-sm">
                 {isInsufficientScopes
-                  ? "The organizer authorized Google Calendar but didn't grant permission to create calendar events. They need to re-connect with proper permissions."
+                  ? "The organizer authorized Google Calendar but didn&apos;t grant permission to create calendar events. They need to re-connect with proper permissions."
                   : isAPIDisabled
-                  ? "The organizer's Google Cloud project hasn't enabled the Google Calendar API yet. This needs to be activated before bookings can be processed."
+                  ? "The organizer&apos;s Google Cloud project hasn&apos;t enabled the Google Calendar API yet. This needs to be activated before bookings can be processed."
                   : data.error}
               </p>
 
@@ -180,7 +180,7 @@ export default function BookingForm({ event, availability, organiserGoogleConnec
                     </li>
                     <li className="flex gap-2">
                       <span className="font-bold text-red-600 flex-shrink-0">2.</span>
-                      <span>Search for <span className="font-semibold">"Google Calendar API"</span></span>
+                      <span>Search for <span className="font-semibold">&quot;Google Calendar API&quot;</span></span>
                     </li>
                     <li className="flex gap-2">
                       <span className="font-bold text-red-600 flex-shrink-0">3.</span>

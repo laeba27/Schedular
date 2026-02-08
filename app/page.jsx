@@ -298,7 +298,7 @@ const Home = () => {
               Up and Running in Minutes
             </h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              From signup to your first booking—it's that simple
+              From signup to your first booking—it&apos;s that simple
             </p>
           </div>
 
@@ -360,7 +360,7 @@ const Home = () => {
               Loved by Professionals Worldwide
             </h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Don't just take our word for it—hear from our happy users
+              Don&apos;t just take our word for it—hear from our happy users
             </p>
           </div>
           <TestimonialsCarousel />
@@ -380,7 +380,7 @@ const Home = () => {
               Ready to Reclaim Your Time?
             </h2>
             <p className="text-xl md:text-2xl text-blue-100 mb-12 max-w-3xl mx-auto leading-relaxed">
-              Stop juggling calendars. Start scheduling smarter. Join thousands who've transformed how they manage appointments.
+              Stop juggling calendars. Start scheduling smarter. Join thousands who&apos;ve transformed how they manage appointments.
             </p>
             <div className="flex flex-wrap gap-4 justify-center mb-8">
               <Link href="/dashboard">

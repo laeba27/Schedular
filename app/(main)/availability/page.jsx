@@ -1,6 +1,5 @@
 import React from "react";
 import AvailabilityForm from "./_components/availability-form";
-import GoogleCalendarStatus from "./_components/google-calendar-status";
 import { getUserAvailability } from "@/actions/availability";
 import { isGoogleConnected } from "@/actions/users";
 import { defaultAvailability } from "./data";
