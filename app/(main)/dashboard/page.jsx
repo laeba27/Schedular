@@ -1,6 +1,5 @@
 "use client";
-
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useUser } from "@clerk/nextjs";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -13,15 +12,17 @@ import useFetch from "@/hooks/use-fetch";
 import { usernameSchema } from "@/app/lib/validators";
 import { getLatestUpdates } from "@/actions/dashboard";
 import { format, getDaysInMonth, startOfMonth, getDay } from "date-fns";
-import { AlertCircle, Check, Calendar as CalendarIcon, Copy, Share2, Mail, MessageCircle, Instagram, Linkedin, Twitter } from "lucide-react";
+import { AlertCircle, Check, Calendar as CalendarIcon, Copy, Share2, Mail, MessageCircle, Linkedin, Twitter } from "lucide-react";
 
 export default function DashboardPage() {
   const { user, isLoaded } = useUser();
   const [googleConnected, setGoogleConnected] = useState(null);
-  const [currentTime, setCurrentTime] = useState(new Date());
-  const [greeting, setGreeting] = useState("");
+  const [currentTime, setCurrentTime] = useState(null);
+  const [greeting, setGreeting] = useState(null);
+  const [bookingLink, setBookingLink] = useState("");
   const [copied, setCopied] = useState(false);
   const [shareDropdownOpen, setShareDropdownOpen] = useState(false);
+  const [isClient, setIsClient] = useState(false);
 
   const {
     register,
@@ -38,6 +39,15 @@ export default function DashboardPage() {
   }, [isLoaded]);
 
   useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  useEffect(() => {
+    if (!isClient || !user?.username) return;
+    setBookingLink(`${window.location.origin}/${user.username}`);
+  }, [isClient, user?.username]);
+
+  useEffect(() => {
     (async () => {
       const result = await isGoogleConnected();
       setGoogleConnected(result);
@@ -47,24 +57,30 @@ export default function DashboardPage() {
   const {
     loading: loadingUpdates,
     data: upcomingMeetings,
+    error: meetingsError,
     fn: fnUpdates,
   } = useFetch(getLatestUpdates);
 
   useEffect(() => {
-    (async () => await fnUpdates())();
-  }, []);
+    fnUpdates();
+  }, []);  // Only run once on mount
 
   // Update time every second
   useEffect(() => {
+    if (!isClient) return;
+    
+    setCurrentTime(new Date());
     const timer = setInterval(() => {
       setCurrentTime(new Date());
     }, 1000);
 
     return () => clearInterval(timer);
-  }, []);
+  }, [isClient]);
 
   // Set greeting based on time
   useEffect(() => {
+    if (!isClient) return;
+    
     const hour = new Date().getHours();
     if (hour < 12) {
       setGreeting("Good Morning");
@@ -73,9 +89,7 @@ export default function DashboardPage() {
     } else {
       setGreeting("Good Evening");
     }
-  }, []);
-
-  const bookingLink = `${typeof window !== 'undefined' ? window.location.origin : ''}/${user?.username}`;
+  }, [isClient]);
 
   const handleCopy = async () => {
     await navigator.clipboard.writeText(bookingLink);
@@ -154,7 +168,7 @@ export default function DashboardPage() {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 flex-shrink-0">
         <div className="space-y-1">
           <div className="flex items-center gap-2">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900">{greeting}, {user?.firstName}! 👋</h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900">{greeting ? `${greeting}, ${user?.firstName}! 👋` : "Welcome! 👋"}</h2>
             {googleConnected === true && (
               <div className="flex items-center gap-1 bg-green-50 border border-green-200 px-2 py-1 rounded-full">
                 <Check className="w-3 h-3 text-green-600" />
@@ -166,10 +180,12 @@ export default function DashboardPage() {
         </div>
 
         {/* Time and Date */}
-        <div className="text-right bg-gradient-to-br from-blue-50 to-indigo-50 p-4 rounded-lg border border-gray-200 min-w-max flex-shrink-0">
-          <p className="text-3xl md:text-4xl font-bold text-gray-900">{format(currentTime, "HH:mm")}</p>
-          <p className="text-xs md:text-sm text-gray-600 mt-1">{format(currentTime, "MMM d, yyyy")}</p>
-        </div>
+        {currentTime && (
+          <div className="text-right bg-gradient-to-br from-blue-50 to-indigo-50 p-4 rounded-lg border border-gray-200 min-w-max flex-shrink-0">
+            <p className="text-3xl md:text-4xl font-bold text-gray-900">{format(currentTime, "HH:mm")}</p>
+            <p className="text-xs md:text-sm text-gray-600 mt-1">{format(currentTime, "MMM d, yyyy")}</p>
+          </div>
+        )}
       </div>
 
       {/* Main Content */}
@@ -184,7 +200,24 @@ export default function DashboardPage() {
               </CardTitle>
             </CardHeader>
             <CardContent className="flex-1 overflow-y-auto">
-              {!loadingUpdates ? (
+              {loadingUpdates ? (
+                <p className="text-center text-gray-500 py-4 text-sm">Loading updates...</p>
+              ) : meetingsError ? (
+                <div className="text-center py-6 flex flex-col items-center justify-center h-full">
+                  <div className="text-4xl mb-2">⚠️</div>
+                  <p className="text-red-600 font-medium text-sm mb-1">Error loading meetings</p>
+                  <p className="text-xs text-gray-500 mb-3">
+                    {meetingsError?.message || "Something went wrong"}
+                  </p>
+                  <Button
+                    onClick={() => fnUpdates()}
+                    variant="outline"
+                    className="text-xs h-8"
+                  >
+                    Retry
+                  </Button>
+                </div>
+              ) : (
                 <div>
                   {upcomingMeetings && upcomingMeetings?.length > 0 ? (
                     <div className="space-y-2">
@@ -215,8 +248,6 @@ export default function DashboardPage() {
                     </div>
                   )}
                 </div>
-              ) : (
-                <p className="text-center text-gray-500 py-4 text-sm">Loading updates...</p>
               )}
             </CardContent>
           </Card>
@@ -313,7 +344,9 @@ export default function DashboardPage() {
                 <div>
                   <p className="text-xs text-gray-500 mb-2">Booking link</p>
                   <div className="flex items-center gap-2 bg-gray-50 rounded-lg p-2 border border-gray-200">
-                    <span className="text-xs text-gray-600 truncate flex-shrink-0">{typeof window !== 'undefined' ? window.location.origin : ''}/</span>
+                    {isClient && bookingLink && (
+                      <span className="text-xs text-gray-600 truncate flex-shrink-0">{bookingLink.split("/").slice(0, 3).join("/")}/</span>
+                    )}
                     <Input 
                       {...register("username")} 
                       placeholder="username"

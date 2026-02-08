@@ -1,6 +1,5 @@
 import React from "react";
 import { SignedIn, SignedOut, SignInButton } from "@clerk/nextjs";
-import Image from "next/image";
 import Link from "next/link";
 import { checkUser } from "@/lib/checkUser";
 import UserMenu from "./user-menu";
@@ -13,13 +12,9 @@ async function Header() {
   return (
     <nav className="mx-auto py-2 px-4 flex justify-between items-center shadow-md border-b border-gray-200 bg-white">
       <Link href="/" className="flex items-center">
-        <Image
-          src="/logo.png"
-          width="150"
-          height="60"
-          alt="Schedulrr Logo"
-          className="h-16 w-auto"
-        />
+        <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent">
+          Schedular
+        </span>
       </Link>
 
       <div className="flex items-center gap-4">
