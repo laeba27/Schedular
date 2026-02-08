@@ -8,7 +8,7 @@ import { Calendar } from "lucide-react";
 
 export default async function AvailabilityPage() {
   await checkUser();
-  const [availability, googleConnected] = await Promise.all([
+  const [availability] = await Promise.all([
     getUserAvailability(),
     isGoogleConnected(),
   ]);

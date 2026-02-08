@@ -17,7 +17,6 @@ import { AlertCircle, RefreshCw, Mail } from "lucide-react";
 export default function BookingForm({ event, availability, organiserGoogleConnected }) {
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedTime, setSelectedTime] = useState(null);
-  const [showRetry, setShowRetry] = useState(false);
 
   const {
     register,
@@ -137,7 +136,7 @@ export default function BookingForm({ event, availability, organiserGoogleConnec
             </div>
             
             <div className="mt-4 p-3 bg-blue-100 border border-blue-300 rounded-lg text-xs text-blue-800">
-              <strong>💡 Tip:</strong> If the organizer just connected their Google Calendar, click "Try Again" to refresh this page.
+              <strong>💡 Tip:</strong> If the organizer just connected their Google Calendar, click &quot;Try Again&quot; to refresh this page.
             </div>
           </div>
         </div>
